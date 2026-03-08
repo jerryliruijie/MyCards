@@ -4,7 +4,7 @@ from uuid import UUID
 
 from sqlmodel import Field
 
-from app.models.common import TimestampMixin, UUIDMixin, UserOwnedMixin, utcnow
+from app.models.common import TimestampMixin, UserOwnedMixin, UUIDMixin, utcnow
 
 
 class Card(UUIDMixin, TimestampMixin, UserOwnedMixin, table=True):

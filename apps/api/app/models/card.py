@@ -42,7 +42,7 @@ class CardImage(UUIDMixin, TimestampMixin, table=True):
 class ManualValuation(UUIDMixin, TimestampMixin, table=True):
     card_id: UUID = Field(foreign_key="card.id", index=True)
     value: float = Field(nullable=False, ge=0)
-    currency: str = Field(default="USD", max_length=8)
+    currency: str = Field(default="CNY", max_length=8)
     valued_at: datetime = Field(index=True)
     note: Optional[str] = None
 
@@ -51,3 +51,4 @@ class CardTag(table=True):
     card_id: UUID = Field(foreign_key="card.id", primary_key=True)
     tag_id: UUID = Field(foreign_key="tag.id", primary_key=True)
     created_at: datetime = Field(default_factory=utcnow)
+

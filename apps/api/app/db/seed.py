@@ -185,7 +185,7 @@ def seed() -> None:
             ManualValuation,
             card_id=card1.id,
             value=140,
-            currency="USD",
+            currency="CNY",
             valued_at=datetime.now(timezone.utc) - timedelta(days=5),
             note="Recent comp check",
         )
@@ -196,7 +196,7 @@ def seed() -> None:
             card_id=card1.id,
             price_source_id=manual_source.id,
             value=145,
-            currency="USD",
+            currency="CNY",
             captured_at=datetime.now(timezone.utc) - timedelta(days=1),
             confidence=0.82,
             note="Mock reference",
@@ -210,3 +210,4 @@ def seed() -> None:
 if __name__ == "__main__":
     seed()
     print("Seed complete")
+

@@ -9,7 +9,7 @@ class PriceSnapshotCreate(BaseModel):
     card_id: UUID
     price_source_id: UUID
     value: float = Field(ge=0)
-    currency: str = "USD"
+    currency: str = "CNY"
     captured_at: datetime
     confidence: Optional[float] = Field(default=None, ge=0, le=1)
     note: Optional[str] = None
@@ -18,7 +18,7 @@ class PriceSnapshotCreate(BaseModel):
 class ManualSnapshotCreate(BaseModel):
     card_id: UUID
     value: float = Field(ge=0)
-    currency: str = "USD"
+    currency: str = "CNY"
     captured_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     note: Optional[str] = "手动录入市场价"
 
@@ -38,3 +38,4 @@ class PriceSourceRead(BaseModel):
 
     class Config:
         from_attributes = True
+

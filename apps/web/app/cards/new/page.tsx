@@ -52,7 +52,7 @@ export default function NewCardPage() {
         await api.createManualSnapshot({
           card_id: card.id,
           value: Number(marketPrice),
-          currency: "USD",
+          currency: "CNY",
           captured_at: new Date().toISOString(),
           note: "手动录入市场价",
         });
@@ -95,7 +95,7 @@ export default function NewCardPage() {
 
         <div className="grid gap-3 md:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium">买入价格（USD）</label>
+            <label className="mb-1 block text-sm font-medium">买入价格（RMB）</label>
             <input
               type="number"
               step="0.01"
@@ -105,7 +105,7 @@ export default function NewCardPage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium">当前市场价（USD，手动）</label>
+            <label className="mb-1 block text-sm font-medium">当前市场价（RMB，手动）</label>
             <input
               type="number"
               step="0.01"
@@ -145,3 +145,4 @@ export default function NewCardPage() {
     </div>
   );
 }
+

@@ -68,9 +68,10 @@ class CardService:
             primary_image_key=image.storage_key if image else None,
             buy_price=lot.unit_price if lot else None,
             market_price=snap.value if snap else None,
-            currency=snap.currency if snap else "USD",
+            currency=snap.currency if snap else "CNY",
         )
 
     def list_card_cores(self, session: Session) -> list[CardCoreRead]:
         cards = self.repo.list_cards(session)
         return [self.get_card_core(session, card.id) for card in cards]
+

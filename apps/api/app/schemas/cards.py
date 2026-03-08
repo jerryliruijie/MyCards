@@ -80,4 +80,5 @@ class CardCoreRead(BaseModel):
     primary_image_key: Optional[str] = None
     buy_price: Optional[float] = None
     market_price: Optional[float] = None
-    currency: str = "USD"
+    currency: str = "CNY"
+

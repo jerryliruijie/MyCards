@@ -105,3 +105,17 @@ npm run dev
 - 当前已保留最小 `User` 模型，为未来多用户迁移做准备
 - 定价能力全部经适配器层接入，后续可平滑增加真实价格源
 - 认证在 v1 非强制，代码中保留了明确 TODO 标记
+
+## 一键启动（Windows）
+
+可直接双击仓库根目录的 `Start-MyCards.bat`。
+
+等价命令：
+```bash
+powershell -ExecutionPolicy Bypass -File .\scripts\start-dev.ps1
+```
+
+快速重启（跳过依赖安装）：
+```bash
+.\Start-MyCards.bat --skip-install
+```

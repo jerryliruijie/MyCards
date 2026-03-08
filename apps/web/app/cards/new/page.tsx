@@ -27,7 +27,7 @@ export default function NewCardPage() {
     });
 
     if (!res.ok) {
-      setError(`Could not create card (${res.status})`);
+      setError(`创建卡片失败（${res.status}）`);
       return;
     }
 
@@ -38,23 +38,23 @@ export default function NewCardPage() {
   return (
     <div className="space-y-4">
       <header className="panel">
-        <h2 className="text-xl font-semibold">Add Card</h2>
-        <p className="text-sm text-slate-600">Structured metadata first, optional fields later.</p>
+        <h2 className="text-xl font-semibold">新增卡片</h2>
+        <p className="text-sm text-slate-600">先录入结构化核心信息，其他字段后续补充。</p>
       </header>
 
       <form className="panel max-w-xl space-y-3" onSubmit={onSubmit}>
         <div>
-          <label className="mb-1 block text-sm font-medium">Title</label>
+          <label className="mb-1 block text-sm font-medium">标题</label>
           <input
             required
             className="w-full rounded border p-2 text-sm"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="2023 Topps Series 1 Aaron Judge #99"
+            placeholder="例如：2023 Topps Series 1 #99"
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">Year</label>
+          <label className="mb-1 block text-sm font-medium">年份</label>
           <input
             type="number"
             className="w-full rounded border p-2 text-sm"
@@ -63,7 +63,7 @@ export default function NewCardPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium">Card Number</label>
+          <label className="mb-1 block text-sm font-medium">卡号</label>
           <input
             className="w-full rounded border p-2 text-sm"
             value={cardNumber}
@@ -74,9 +74,10 @@ export default function NewCardPage() {
         {error && <div className="text-sm text-red-700">{error}</div>}
 
         <button className="rounded bg-slate-800 px-3 py-2 text-sm text-white" type="submit">
-          Create card
+          创建卡片
         </button>
       </form>
     </div>
   );
 }
+

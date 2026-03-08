@@ -5,10 +5,10 @@ import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
 const links = [
-  { href: "/", label: "Dashboard" },
-  { href: "/cards", label: "Cards" },
-  { href: "/cards/new", label: "Add Card" },
-  { href: "/storage", label: "Storage" },
+  { href: "/", label: "仪表盘" },
+  { href: "/cards", label: "卡片列表" },
+  { href: "/cards/new", label: "新增卡片" },
+  { href: "/storage", label: "存储管理" },
 ];
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -17,7 +17,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <h1 className="text-lg font-bold">MyCards Vault</h1>
+        <h1 className="text-lg font-bold">MyCards 个人卡库</h1>
         <nav className="mt-4 space-y-2">
           {links.map((link) => (
             <Link

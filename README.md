@@ -1,53 +1,53 @@
 ﻿# MyCards
 
-MyCards is an open-source personal collectibles vault focused on sports cards, TCG cards, and other collectible cards.
+MyCards 是一个开源的个人收藏卡片资产库，聚焦于体育卡、TCG 卡及其他收藏卡。
 
-It is intentionally:
-- Personal-use first
-- Web-first for fast iteration
-- Modular but lightweight
-- Easy to self-host
+项目定位：
+- 个人优先
+- 轻量易维护
+- 快速迭代
+- 便于自托管
 
-## Stack
+## 技术栈
 
-- Frontend: Next.js + TypeScript + Tailwind CSS
-- Backend API: FastAPI + SQLModel
-- Database: PostgreSQL
-- Background jobs: lightweight Python worker (extensible)
-- Image storage: local filesystem in development, pluggable provider for S3 later
+- 前端：Next.js + TypeScript + Tailwind CSS
+- 后端：FastAPI + SQLModel
+- 数据库：PostgreSQL
+- 后台任务：轻量 Python Worker（后续可接调度器）
+- 图片存储：开发阶段本地文件系统，后续可切换 S3 兼容存储
 
-## Monorepo Layout
+## 仓库结构
 
-- `apps/api`: FastAPI backend
-- `apps/web`: Next.js web frontend
-- `docs`: product and architecture docs
-- `.github/workflows`: CI pipelines
-- `infra`: optional infra templates and local setup helpers
+- `apps/api`：FastAPI 后端
+- `apps/web`：Next.js 前端
+- `docs`：产品与架构文档
+- `.github/workflows`：CI 流水线
+- `infra`：本地基础设施配置
 
-## Architecture Summary
+## 架构说明
 
-The backend is split into layers:
-- `models`: SQLModel entities and relational constraints
-- `repositories`: persistence logic
-- `services`: domain logic and composition
-- `api/routes`: HTTP routers
-- `integrations/pricing`: provider adapter interface + mock provider
+后端采用分层结构：
+- `models`：领域模型与关系约束
+- `repositories`：数据访问逻辑
+- `services`：领域服务与业务编排
+- `api/routes`：HTTP 路由层
+- `integrations/pricing`：价格提供方适配器接口与实现
 
-Key decisions:
-- A `Card` is independent from any single purchase or price source
-- Price history is append-only with provider/source awareness
-- Storage positions are hierarchical (parent-child)
-- Manual valuation is first-class for user override and one-off estimates
+核心设计决策：
+- `Card` 是收藏对象本体，不绑定单一购买记录或单一价格来源
+- 价格快照 `PriceSnapshot` 采用追加写入，不覆盖历史
+- `StoragePosition` 支持层级结构
+- `ManualValuation` 为一等公民，支持手工估值
 
-## Quick Start (Development)
+## 本地开发快速开始
 
-### 1. Prerequisites
+### 1. 环境准备
 
 - Python 3.12+
 - Node.js 20+
 - PostgreSQL 15+
 
-### 2. Backend
+### 2. 启动后端
 
 ```bash
 cd apps/api
@@ -60,7 +60,7 @@ python -m app.db.seed
 uvicorn app.main:app --reload --port 8000
 ```
 
-### 3. Frontend
+### 3. 启动前端
 
 ```bash
 cd apps/web
@@ -69,39 +69,39 @@ copy .env.example .env.local
 npm run dev
 ```
 
-Open:
-- Web: `http://localhost:3000`
-- API docs: `http://localhost:8000/docs`
+访问地址：
+- 前端：`http://localhost:3000`
+- 后端文档：`http://localhost:8000/docs`
 
-## Environment Variables
+## 环境变量
 
-### API (`apps/api/.env`)
+### API（`apps/api/.env`）
 
 - `DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/mycards`
 - `STORAGE_DIR=./storage`
 
-### Web (`apps/web/.env.local`)
+### Web（`apps/web/.env.local`）
 
 - `NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api/v1`
 
-## Milestones (v1 foundation)
+## 当前里程碑
 
-- [x] Product docs + data model + roadmap
-- [x] Domain model + migration scaffolding
-- [x] FastAPI endpoint scaffolding for core inventory workflows
-- [x] Pricing provider interface + mock implementation
-- [x] Next.js web scaffolding + typed API client
-- [x] Wireframe proposal for UI review before polished UI
+- [x] 产品文档 + 数据模型 + 路线图
+- [x] 领域模型与迁移脚手架
+- [x] 核心库存流程 API 脚手架
+- [x] 定价提供方接口 + Mock 实现
+- [x] Next.js 前端脚手架 + 强类型 API Client
+- [x] UI 线框方案（先评审再做精细化 UI）
 
-## Non-goals
+## 明确不做（v1）
 
-- Marketplace
-- Auctions
-- Social features
-- Heavy enterprise auth/multi-tenant complexity in v1
+- 市场交易平台
+- 拍卖系统
+- 社交功能
+- 重型企业级认证与多租户复杂度
 
-## Future-facing Notes
+## 未来扩展方向
 
-- API and DB already include a minimal `User` for future multi-user migration.
-- Pricing integrations are behind an adapter interface, so real providers can be added without rewriting domain logic.
-- Auth is intentionally optional in v1 and marked with explicit TODOs.
+- 当前已保留最小 `User` 模型，为未来多用户迁移做准备
+- 定价能力全部经适配器层接入，后续可平滑增加真实价格源
+- 认证在 v1 非强制，代码中保留了明确 TODO 标记

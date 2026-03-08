@@ -9,31 +9,31 @@ export default async function CardsPage() {
     <div className="space-y-4">
       <header className="panel flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold">Card Inventory</h2>
-          <p className="text-sm text-slate-600">Information-dense list optimized for management.</p>
+          <h2 className="text-xl font-semibold">卡片库存</h2>
+          <p className="text-sm text-slate-600">信息密集型列表，优先管理效率。</p>
         </div>
         <Link href="/cards/new" className="rounded bg-slate-800 px-3 py-2 text-sm text-white">
-          Add card
+          新增卡片
         </Link>
       </header>
 
       <section className="panel">
         <div className="mb-3 grid gap-2 md:grid-cols-5">
-          <input className="rounded border p-2 text-sm" placeholder="Search title" disabled />
-          <input className="rounded border p-2 text-sm" placeholder="Sport" disabled />
-          <input className="rounded border p-2 text-sm" placeholder="Player" disabled />
-          <input className="rounded border p-2 text-sm" placeholder="Set" disabled />
-          <input className="rounded border p-2 text-sm" placeholder="Tag" disabled />
+          <input className="rounded border p-2 text-sm" placeholder="搜索标题" disabled />
+          <input className="rounded border p-2 text-sm" placeholder="运动类型" disabled />
+          <input className="rounded border p-2 text-sm" placeholder="球员" disabled />
+          <input className="rounded border p-2 text-sm" placeholder="系列" disabled />
+          <input className="rounded border p-2 text-sm" placeholder="标签" disabled />
         </div>
 
         <table className="table">
           <thead>
             <tr>
-              <th>Title</th>
-              <th>Year</th>
-              <th>Card #</th>
-              <th>Grade</th>
-              <th>Updated</th>
+              <th>标题</th>
+              <th>年份</th>
+              <th>卡号</th>
+              <th>评级</th>
+              <th>更新时间</th>
             </tr>
           </thead>
           <tbody>
@@ -53,7 +53,7 @@ export default async function CardsPage() {
             {cards.length === 0 && (
               <tr>
                 <td colSpan={5} className="text-slate-500">
-                  No cards yet.
+                  暂无卡片数据。
                 </td>
               </tr>
             )}

@@ -21,6 +21,17 @@
 - Do not squash commits when merging into master
 - Preserve readable development history
 
+## Code conventions
+- Use clear, consistent, and maintainable naming for variables, functions, classes, and files
+- Prefer descriptive names over abbreviations when readability would otherwise drop
+- Keep modules small and composable; avoid large mixed-responsibility files
+
+## Language policy
+- Agent instruction documents (for example `AGENTS.md`) must be written in English only
+- Code comments should be written in Chinese
+- `README.md` and user-facing project docs should be written in Chinese unless explicitly requested otherwise
+- Team communication in this project uses Chinese
+
 ## Frontend
 - Before major UI implementation, show a wireframe/mockup/spec for review
 - Prioritize usability and clean information-dense layout

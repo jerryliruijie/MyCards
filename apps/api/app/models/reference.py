@@ -1,7 +1,7 @@
 ﻿from typing import Optional
 from uuid import UUID
 
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field
 
 from app.models.common import TimestampMixin, UUIDMixin
 

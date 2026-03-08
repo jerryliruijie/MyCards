@@ -5,7 +5,7 @@ from sqlmodel import Session
 
 from app.models.card import Card, CardImage
 from app.repositories.cards import CardRepository
-from app.schemas.cards import CardCreate, CardImageCreate, CardUpdate
+from app.schemas.cards import CardCoreRead, CardCreate, CardImageCreate, CardUpdate
 
 
 class CardService:
@@ -55,3 +55,22 @@ class CardService:
         self.get_card_or_404(session, card_id)
         if not self.repo.remove_tag(session, card_id, tag_id):
             raise HTTPException(status_code=404, detail="Card tag assignment not found")
+
+    def get_card_core(self, session: Session, card_id: UUID) -> CardCoreRead:
+        card = self.get_card_or_404(session, card_id)
+        image = self.repo.get_primary_image(session, card_id)
+        lot = self.repo.latest_purchase_lot(session, card_id)
+        snap = self.repo.latest_price_snapshot(session, card_id)
+
+        return CardCoreRead(
+            card_id=card.id,
+            title=card.title,
+            primary_image_key=image.storage_key if image else None,
+            buy_price=lot.unit_price if lot else None,
+            market_price=snap.value if snap else None,
+            currency=snap.currency if snap else "USD",
+        )
+
+    def list_card_cores(self, session: Session) -> list[CardCoreRead]:
+        cards = self.repo.list_cards(session)
+        return [self.get_card_core(session, card.id) for card in cards]

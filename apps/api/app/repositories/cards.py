@@ -5,6 +5,8 @@ from uuid import UUID
 from sqlmodel import Session, desc, select
 
 from app.models.card import Card, CardImage, CardTag
+from app.models.pricing import PriceSnapshot
+from app.models.transactions import PurchaseLot
 
 
 class CardRepository:
@@ -58,6 +60,15 @@ class CardRepository:
         )
         return list(session.exec(stmt))
 
+    def get_primary_image(self, session: Session, card_id: UUID) -> CardImage | None:
+        stmt = (
+            select(CardImage)
+            .where(CardImage.card_id == card_id)
+            .order_by(CardImage.is_primary.desc(), CardImage.sort_order.asc())
+            .limit(1)
+        )
+        return session.exec(stmt).first()
+
     def add_image(self, session: Session, image: CardImage) -> CardImage:
         if image.is_primary:
             self.clear_primary_images(session, image.card_id)
@@ -100,3 +111,21 @@ class CardRepository:
     def list_card_ids(self, session: Session) -> Iterable[UUID]:
         stmt = select(Card.id)
         return list(session.exec(stmt))
+
+    def latest_purchase_lot(self, session: Session, card_id: UUID) -> PurchaseLot | None:
+        stmt = (
+            select(PurchaseLot)
+            .where(PurchaseLot.card_id == card_id)
+            .order_by(desc(PurchaseLot.purchased_at))
+            .limit(1)
+        )
+        return session.exec(stmt).first()
+
+    def latest_price_snapshot(self, session: Session, card_id: UUID) -> PriceSnapshot | None:
+        stmt = (
+            select(PriceSnapshot)
+            .where(PriceSnapshot.card_id == card_id)
+            .order_by(desc(PriceSnapshot.captured_at))
+            .limit(1)
+        )
+        return session.exec(stmt).first()

@@ -8,6 +8,15 @@
   updated_at: string;
 };
 
+export type CardCore = {
+  card_id: string;
+  title: string;
+  primary_image_key?: string | null;
+  buy_price?: number | null;
+  market_price?: number | null;
+  currency: string;
+};
+
 export type PortfolioSummary = {
   card_count: number;
   total_cost_basis: number;

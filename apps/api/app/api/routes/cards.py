@@ -5,7 +5,14 @@ from fastapi import APIRouter, Depends, Response, status
 from sqlmodel import Session
 
 from app.db.session import get_session
-from app.schemas.cards import CardCreate, CardImageCreate, CardImageRead, CardRead, CardUpdate
+from app.schemas.cards import (
+    CardCoreRead,
+    CardCreate,
+    CardImageCreate,
+    CardImageRead,
+    CardRead,
+    CardUpdate,
+)
 from app.schemas.tags import CardTagAssign
 from app.services.cards import CardService
 
@@ -24,6 +31,11 @@ def list_cards(
     return service.list_cards(session, q=q, sport_id=sport_id, player_id=player_id, tag_id=tag_id)
 
 
+@router.get("/core/list", response_model=list[CardCoreRead])
+def list_card_cores(session: Session = Depends(get_session)):
+    return service.list_card_cores(session)
+
+
 @router.post("", response_model=CardRead, status_code=status.HTTP_201_CREATED)
 def create_card(payload: CardCreate, session: Session = Depends(get_session)):
     return service.create_card(session, payload)
@@ -32,6 +44,11 @@ def create_card(payload: CardCreate, session: Session = Depends(get_session)):
 @router.get("/{card_id}", response_model=CardRead)
 def get_card(card_id: UUID, session: Session = Depends(get_session)):
     return service.get_card_or_404(session, card_id)
+
+
+@router.get("/{card_id}/core", response_model=CardCoreRead)
+def get_card_core(card_id: UUID, session: Session = Depends(get_session)):
+    return service.get_card_core(session, card_id)
 
 
 @router.patch("/{card_id}", response_model=CardRead)

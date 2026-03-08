@@ -4,13 +4,15 @@ import { api } from "@/lib/api-client";
 
 export default async function CardsPage() {
   const cards = await api.listCards().catch(() => []);
+  const cores = await api.listCardCores().catch(() => []);
+  const coreMap = new Map(cores.map((c) => [c.card_id, c]));
 
   return (
     <div className="space-y-4">
       <header className="panel flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold">卡片库存</h2>
-          <p className="text-sm text-slate-600">信息密集型列表，优先管理效率。</p>
+          <p className="text-sm text-slate-600">核心信息：标题、图片、买入价、当前市场价。</p>
         </div>
         <Link href="/cards/new" className="rounded bg-slate-800 px-3 py-2 text-sm text-white">
           新增卡片
@@ -29,27 +31,41 @@ export default async function CardsPage() {
         <table className="table">
           <thead>
             <tr>
+              <th>图片</th>
               <th>标题</th>
-              <th>年份</th>
-              <th>卡号</th>
-              <th>评级</th>
+              <th>买入价</th>
+              <th>市场价</th>
               <th>更新时间</th>
             </tr>
           </thead>
           <tbody>
-            {cards.map((card) => (
-              <tr key={card.id}>
-                <td>
-                  <Link className="text-blue-700 hover:underline" href={`/cards/${card.id}`}>
-                    {card.title}
-                  </Link>
-                </td>
-                <td>{card.year ?? "-"}</td>
-                <td>{card.card_number ?? "-"}</td>
-                <td>{card.grade ?? "-"}</td>
-                <td>{new Date(card.updated_at).toLocaleDateString()}</td>
-              </tr>
-            ))}
+            {cards.map((card) => {
+              const core = coreMap.get(card.id);
+              return (
+                <tr key={card.id}>
+                  <td>
+                    {core?.primary_image_key ? (
+                      // 当前阶段先按 URL 渲染，后续再切换真实上传存储
+                      <img
+                        src={core.primary_image_key}
+                        alt={card.title}
+                        className="h-12 w-12 rounded border object-cover"
+                      />
+                    ) : (
+                      <div className="h-12 w-12 rounded border bg-slate-100" />
+                    )}
+                  </td>
+                  <td>
+                    <Link className="text-blue-700 hover:underline" href={`/cards/${card.id}`}>
+                      {card.title}
+                    </Link>
+                  </td>
+                  <td>{core?.buy_price != null ? `$${core.buy_price.toFixed(2)}` : "-"}</td>
+                  <td>{core?.market_price != null ? `$${core.market_price.toFixed(2)}` : "-"}</td>
+                  <td>{new Date(card.updated_at).toLocaleDateString()}</td>
+                </tr>
+              );
+            })}
             {cards.length === 0 && (
               <tr>
                 <td colSpan={5} className="text-slate-500">

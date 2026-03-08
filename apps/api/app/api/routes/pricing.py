@@ -6,7 +6,12 @@ from sqlmodel import Session
 from app.db.session import get_session
 from app.integrations.pricing.registry import get_pricing_provider
 from app.models.reference import PriceSource
-from app.schemas.pricing import PriceSnapshotCreate, PriceSnapshotRead, PriceSourceRead
+from app.schemas.pricing import (
+    ManualSnapshotCreate,
+    PriceSnapshotCreate,
+    PriceSnapshotRead,
+    PriceSourceRead,
+)
 from app.services.pricing import PricingService
 
 router = APIRouter()
@@ -21,6 +26,13 @@ def list_sources(session: Session = Depends(get_session)):
 @router.post("/snapshots", response_model=PriceSnapshotRead, status_code=status.HTTP_201_CREATED)
 def create_snapshot(payload: PriceSnapshotCreate, session: Session = Depends(get_session)):
     return service.create_snapshot(session, payload)
+
+
+@router.post(
+    "/manual-snapshots", response_model=PriceSnapshotRead, status_code=status.HTTP_201_CREATED
+)
+def create_manual_snapshot(payload: ManualSnapshotCreate, session: Session = Depends(get_session)):
+    return service.create_manual_snapshot(session, payload)
 
 
 @router.get("/snapshots/card/{card_id}", response_model=list[PriceSnapshotRead])

@@ -34,6 +34,7 @@ A personal inventory and portfolio tracker for sports cards, TCG cards, and othe
 
 ### Inventory
 - Card CRUD
+- Card core info includes: custom title, image, buy price, and manually entered current market price
 - Search/filter by sport, player, team, brand, set, card type, grading company, tags
 - Multi-image support
 
@@ -81,3 +82,4 @@ A personal inventory and portfolio tracker for sports cards, TCG cards, and othe
 
 ## Design Workflow Rule
 Before polished UI implementation for major screens, produce wireframes/page specs for review.
+

@@ -33,3 +33,15 @@ class PricingRepository:
     def list_sources(self, session: Session) -> list[PriceSource]:
         stmt = select(PriceSource).where(PriceSource.is_enabled.is_(True)).order_by(PriceSource.name.asc())
         return list(session.exec(stmt))
+
+    def get_or_create_manual_source(self, session: Session) -> PriceSource:
+        stmt = select(PriceSource).where(PriceSource.provider_key == "manual-input").limit(1)
+        source = session.exec(stmt).first()
+        if source:
+            return source
+
+        source = PriceSource(name="Manual Input", provider_key="manual-input", is_enabled=True)
+        session.add(source)
+        session.commit()
+        session.refresh(source)
+        return source

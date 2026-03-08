@@ -125,3 +125,17 @@ powershell -ExecutionPolicy Bypass -File .\scripts\start-dev.ps1
 若只想先看页面，可直接双击 `Start-Web-Only.bat`。
 
 访问：`http://localhost:3000`
+
+## 无 Docker 本地预览
+
+- 已支持无 Docker 启动（自动切换 SQLite 预览模式）
+- 双击：`Start-MyCards.bat`
+
+## 安装 Node（本机缺 npm 时）
+
+- 双击：`Install-Node-LTS.bat`
+- 安装后重开终端，再执行启动脚本
+
+## 在线部署（无需本机安装）
+
+详见：`docs/online-deployment.md`

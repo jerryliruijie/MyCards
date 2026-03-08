@@ -4,10 +4,27 @@ setlocal
 set SCRIPT_DIR=%~dp0
 set PS1=%SCRIPT_DIR%start-dev.ps1
 
-if /I "%1"=="--skip-install" (
-  powershell -ExecutionPolicy Bypass -File "%PS1%" -SkipInstall
-) else (
-  powershell -ExecutionPolicy Bypass -File "%PS1%"
+where powershell >nul 2>nul
+if errorlevel 1 (
+  echo [MyCards] ??? powershell??????
+  pause
+  exit /b 1
 )
 
+if /I "%1"=="--skip-install" (
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%PS1%" -SkipInstall
+) else (
+  powershell -NoProfile -ExecutionPolicy Bypass -File "%PS1%"
+)
+
+if errorlevel 1 (
+  echo.
+  echo [MyCards] ??????????????????
+  pause
+  exit /b 1
+)
+
+echo.
+echo [MyCards] ????????????????????/???????
 endlocal
+exit /b 0

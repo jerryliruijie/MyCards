@@ -119,3 +119,9 @@ powershell -ExecutionPolicy Bypass -File .\scripts\start-dev.ps1
 ```bash
 .\Start-MyCards.bat --skip-install
 ```
+
+## 仅预览前端（不依赖 Docker）
+
+若只想先看页面，可直接双击 `Start-Web-Only.bat`。
+
+访问：`http://localhost:3000`

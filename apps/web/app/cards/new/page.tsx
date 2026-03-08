@@ -10,6 +10,7 @@ export default function NewCardPage() {
   const [title, setTitle] = useState("");
   const [year, setYear] = useState("");
   const [cardNumber, setCardNumber] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState("");
   const [buyPrice, setBuyPrice] = useState("");
   const [marketPrice, setMarketPrice] = useState("");
@@ -26,7 +27,9 @@ export default function NewCardPage() {
         card_number: cardNumber || null,
       });
 
-      if (imageUrl.trim()) {
+      if (imageFile) {
+        await api.uploadCardImage(card.id, imageFile);
+      } else if (imageUrl.trim()) {
         await api.addCardImage(card.id, {
           storage_key: imageUrl.trim(),
           content_type: "image/url",
@@ -84,12 +87,23 @@ export default function NewCardPage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium">图片 URL</label>
+          <label className="mb-1 block text-sm font-medium">上传图片（推荐）</label>
+          <input
+            type="file"
+            accept="image/*"
+            className="w-full rounded border p-2 text-sm"
+            onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block text-sm font-medium">图片 URL（可选兜底）</label>
           <input
             className="w-full rounded border p-2 text-sm"
             value={imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
             placeholder="https://..."
+            disabled={!!imageFile}
           />
         </div>
 
@@ -145,4 +159,3 @@ export default function NewCardPage() {
     </div>
   );
 }
-

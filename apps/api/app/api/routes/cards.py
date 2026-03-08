@@ -1,10 +1,11 @@
 ﻿from typing import Optional
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, File, Query, Response, UploadFile, status
 from sqlmodel import Session
 
 from app.db.session import get_session
+from app.integrations.storage.registry import get_storage_backend
 from app.schemas.cards import (
     CardCoreRead,
     CardCreate,
@@ -69,6 +70,25 @@ def list_images(card_id: UUID, session: Session = Depends(get_session)):
 
 @router.post("/{card_id}/images", response_model=CardImageRead, status_code=status.HTTP_201_CREATED)
 def add_image(card_id: UUID, payload: CardImageCreate, session: Session = Depends(get_session)):
+    return service.add_image(session, card_id, payload)
+
+
+@router.post("/{card_id}/images/upload", response_model=CardImageRead, status_code=status.HTTP_201_CREATED)
+async def upload_image(
+    card_id: UUID,
+    file: UploadFile = File(...),
+    is_primary: bool = Query(default=True),
+    sort_order: int = Query(default=0),
+    session: Session = Depends(get_session),
+):
+    storage = get_storage_backend()
+    storage_key = await storage.save_card_image(card_id, file)
+    payload = CardImageCreate(
+        storage_key=storage_key,
+        content_type=file.content_type,
+        is_primary=is_primary,
+        sort_order=sort_order,
+    )
     return service.add_image(session, card_id, payload)
 
 

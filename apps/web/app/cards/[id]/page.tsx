@@ -1,6 +1,7 @@
 ﻿import Link from "next/link";
 
 import { api } from "@/lib/api-client";
+import { resolveImageUrl } from "@/lib/media-url";
 
 export default async function CardDetailPage({ params }: { params: { id: string } }) {
   const card = await api.getCard(params.id).catch(() => null);
@@ -9,6 +10,8 @@ export default async function CardDetailPage({ params }: { params: { id: string 
   if (!card) {
     return <div className="panel">未找到该卡片。</div>;
   }
+
+  const imageSrc = resolveImageUrl(core?.primary_image_key);
 
   return (
     <div className="space-y-4">
@@ -19,13 +22,8 @@ export default async function CardDetailPage({ params }: { params: { id: string 
 
       <section className="grid gap-3 md:grid-cols-3">
         <div className="panel h-56">
-          {core?.primary_image_key ? (
-            // 当前阶段先按 URL 渲染，后续再切换真实上传存储
-            <img
-              src={core.primary_image_key}
-              alt={card.title}
-              className="h-full w-full rounded object-cover"
-            />
+          {imageSrc ? (
+            <img src={imageSrc} alt={card.title} className="h-full w-full rounded object-cover" />
           ) : (
             <div className="flex h-full items-center justify-center text-sm text-slate-500">
               暂无图片
@@ -51,9 +49,9 @@ export default async function CardDetailPage({ params }: { params: { id: string 
           <h3 className="mb-2 font-semibold">价格信息</h3>
           <dl className="grid grid-cols-2 gap-y-1 text-sm">
             <dt>买入价</dt>
-            <dd>{core?.buy_price != null ? `$${core.buy_price.toFixed(2)}` : "-"}</dd>
+            <dd>{core?.buy_price != null ? `¥${core.buy_price.toFixed(2)}` : "-"}</dd>
             <dt>市场价</dt>
-            <dd>{core?.market_price != null ? `$${core.market_price.toFixed(2)}` : "-"}</dd>
+            <dd>{core?.market_price != null ? `¥${core.market_price.toFixed(2)}` : "-"}</dd>
           </dl>
         </div>
       </section>

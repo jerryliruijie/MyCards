@@ -3,12 +3,18 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1";
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const isFormData = init?.body instanceof FormData;
+  const headers: Record<string, string> = {
+    ...(init?.headers as Record<string, string> | undefined),
+  };
+
+  if (!isFormData) {
+    headers["Content-Type"] = "application/json";
+  }
+
   const res = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(init?.headers || {}),
-    },
+    headers,
     cache: "no-store",
   });
 
@@ -31,6 +37,14 @@ export const api = {
     apiFetch<Card>(`/cards/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
   addCardImage: (cardId: string, payload: Record<string, unknown>) =>
     apiFetch(`/cards/${cardId}/images`, { method: "POST", body: JSON.stringify(payload) }),
+  uploadCardImage: (cardId: string, file: File) => {
+    const form = new FormData();
+    form.append("file", file);
+    return apiFetch(
+      `/cards/${cardId}/images/upload?is_primary=true&sort_order=0`,
+      { method: "POST", body: form },
+    );
+  },
   createPurchaseLot: (payload: Record<string, unknown>) =>
     apiFetch("/purchase-lots", { method: "POST", body: JSON.stringify(payload) }),
   createManualSnapshot: (payload: Record<string, unknown>) =>

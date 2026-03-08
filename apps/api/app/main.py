@@ -1,5 +1,8 @@
-﻿from fastapi import FastAPI
+﻿from pathlib import Path
+
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 import app.models  # noqa: F401
 from app.api.router import api_router
@@ -15,6 +18,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+storage_dir = Path(settings.storage_dir)
+storage_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/media", StaticFiles(directory=storage_dir), name="media")
 
 
 @app.get("/health")

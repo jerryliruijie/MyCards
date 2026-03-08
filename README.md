@@ -139,3 +139,6 @@ powershell -ExecutionPolicy Bypass -File .\scripts\start-dev.ps1
 ## 在线部署（无需本机安装）
 
 详见：`docs/online-deployment.md`
+
+- 支持卡片图片本地上传（开发环境落盘到 pps/api/storage，通过 /media 访问）
+

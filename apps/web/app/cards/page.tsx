@@ -1,6 +1,7 @@
 ﻿import Link from "next/link";
 
 import { api } from "@/lib/api-client";
+import { resolveImageUrl } from "@/lib/media-url";
 
 export default async function CardsPage() {
   const cards = await api.listCards().catch(() => []);
@@ -41,13 +42,13 @@ export default async function CardsPage() {
           <tbody>
             {cards.map((card) => {
               const core = coreMap.get(card.id);
+              const imageSrc = resolveImageUrl(core?.primary_image_key);
               return (
                 <tr key={card.id}>
                   <td>
-                    {core?.primary_image_key ? (
-                      // 当前阶段先按 URL 渲染，后续再切换真实上传存储
+                    {imageSrc ? (
                       <img
-                        src={core.primary_image_key}
+                        src={imageSrc}
                         alt={card.title}
                         className="h-12 w-12 rounded border object-cover"
                       />
@@ -60,8 +61,8 @@ export default async function CardsPage() {
                       {card.title}
                     </Link>
                   </td>
-                  <td>{core?.buy_price != null ? `$${core.buy_price.toFixed(2)}` : "-"}</td>
-                  <td>{core?.market_price != null ? `$${core.market_price.toFixed(2)}` : "-"}</td>
+                  <td>{core?.buy_price != null ? `¥${core.buy_price.toFixed(2)}` : "-"}</td>
+                  <td>{core?.market_price != null ? `¥${core.market_price.toFixed(2)}` : "-"}</td>
                   <td>{new Date(card.updated_at).toLocaleDateString()}</td>
                 </tr>
               );

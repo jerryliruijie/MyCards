@@ -5,7 +5,13 @@ from sqlmodel import Session
 
 from app.models.card import Card, CardImage
 from app.repositories.cards import CardRepository
-from app.schemas.cards import CardCoreRead, CardCreate, CardImageCreate, CardImageReorder, CardUpdate
+from app.schemas.cards import (
+    CardCoreRead,
+    CardCreate,
+    CardImageCreate,
+    CardImageReorder,
+    CardUpdate,
+)
 
 
 class CardService:

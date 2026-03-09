@@ -1,8 +1,8 @@
-﻿from datetime import datetime
+from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-from sqlmodel import Field
+from sqlmodel import Field, SQLModel
 
 from app.models.common import TimestampMixin, UserOwnedMixin, UUIDMixin, utcnow
 
@@ -47,7 +47,7 @@ class ManualValuation(UUIDMixin, TimestampMixin, table=True):
     note: Optional[str] = None
 
 
-class CardTag(table=True):
+class CardTag(SQLModel, table=True):
     card_id: UUID = Field(foreign_key="card.id", primary_key=True)
     tag_id: UUID = Field(foreign_key="tag.id", primary_key=True)
     created_at: datetime = Field(default_factory=utcnow)

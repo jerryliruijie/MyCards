@@ -1,4 +1,4 @@
-﻿from datetime import datetime, timezone
+from datetime import datetime, timezone
 from typing import Iterable, Optional
 from uuid import UUID
 
@@ -69,6 +69,9 @@ class CardRepository:
         )
         return session.exec(stmt).first()
 
+    def get_image(self, session: Session, image_id: UUID) -> CardImage | None:
+        return session.get(CardImage, image_id)
+
     def add_image(self, session: Session, image: CardImage) -> CardImage:
         if image.is_primary:
             self.clear_primary_images(session, image.card_id)
@@ -83,12 +86,41 @@ class CardRepository:
                 image.is_primary = False
                 session.add(image)
 
+    def set_primary_image(self, session: Session, image: CardImage) -> CardImage:
+        self.clear_primary_images(session, image.card_id)
+        image.is_primary = True
+        session.add(image)
+        session.commit()
+        session.refresh(image)
+        return image
+
+    def reorder_images(self, session: Session, card_id: UUID, ordered_image_ids: list[UUID]) -> None:
+        images = self.list_images(session, card_id)
+        image_by_id = {image.id: image for image in images}
+        for index, image_id in enumerate(ordered_image_ids):
+            image = image_by_id.get(image_id)
+            if image is None:
+                continue
+            image.sort_order = index
+            session.add(image)
+        session.commit()
+
     def delete_image(self, session: Session, image_id: UUID) -> bool:
         image = session.get(CardImage, image_id)
         if not image:
             return False
+        card_id = image.card_id
+        was_primary = image.is_primary
         session.delete(image)
         session.commit()
+
+        if was_primary:
+            next_primary = self.get_primary_image(session, card_id)
+            if next_primary:
+                next_primary.is_primary = True
+                session.add(next_primary)
+                session.commit()
+
         return True
 
     def assign_tag(self, session: Session, card_id: UUID, tag_id: UUID) -> CardTag:

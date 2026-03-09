@@ -1,4 +1,4 @@
-﻿from datetime import datetime
+from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
@@ -74,6 +74,14 @@ class CardImageRead(BaseModel):
         from_attributes = True
 
 
+class CardImageSetPrimary(BaseModel):
+    image_id: UUID
+
+
+class CardImageReorder(BaseModel):
+    image_ids: list[UUID]
+
+
 class CardCoreRead(BaseModel):
     card_id: UUID
     title: str
@@ -81,4 +89,3 @@ class CardCoreRead(BaseModel):
     buy_price: Optional[float] = None
     market_price: Optional[float] = None
     currency: str = "CNY"
-

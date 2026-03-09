@@ -1,11 +1,11 @@
-﻿from uuid import UUID
+from uuid import UUID
 
 from fastapi import HTTPException
 from sqlmodel import Session
 
 from app.models.card import Card, CardImage
 from app.repositories.cards import CardRepository
-from app.schemas.cards import CardCoreRead, CardCreate, CardImageCreate, CardUpdate
+from app.schemas.cards import CardCoreRead, CardCreate, CardImageCreate, CardImageReorder, CardUpdate
 
 
 class CardService:
@@ -40,8 +40,35 @@ class CardService:
 
     def add_image(self, session: Session, card_id: UUID, payload: CardImageCreate):
         self.get_card_or_404(session, card_id)
-        image = CardImage(card_id=card_id, **payload.model_dump())
+        has_primary = self.repo.get_primary_image(session, card_id) is not None
+        image_data = payload.model_dump()
+        if not has_primary:
+            image_data["is_primary"] = True
+        image = CardImage(card_id=card_id, **image_data)
         return self.repo.add_image(session, image)
+
+    def set_primary_image(self, session: Session, image_id: UUID) -> CardImage:
+        image = self.repo.get_image(session, image_id)
+        if image is None:
+            raise HTTPException(status_code=404, detail="Card image not found")
+        return self.repo.set_primary_image(session, image)
+
+    def reorder_images(self, session: Session, card_id: UUID, payload: CardImageReorder) -> None:
+        self.get_card_or_404(session, card_id)
+        existing_images = self.repo.list_images(session, card_id)
+        existing_ids = {image.id for image in existing_images}
+
+        requested_ids = payload.image_ids
+        if not requested_ids:
+            raise HTTPException(status_code=400, detail="image_ids cannot be empty")
+
+        for image_id in requested_ids:
+            if image_id not in existing_ids:
+                raise HTTPException(status_code=400, detail="image_ids contains unknown image id")
+
+        remaining_ids = [image.id for image in existing_images if image.id not in set(requested_ids)]
+        all_ids = requested_ids + remaining_ids
+        self.repo.reorder_images(session, card_id, all_ids)
 
     def delete_image(self, session: Session, image_id: UUID) -> None:
         if not self.repo.delete_image(session, image_id):
@@ -74,4 +101,3 @@ class CardService:
     def list_card_cores(self, session: Session) -> list[CardCoreRead]:
         cards = self.repo.list_cards(session)
         return [self.get_card_core(session, card.id) for card in cards]
-

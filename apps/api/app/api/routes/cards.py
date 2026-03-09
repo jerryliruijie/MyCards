@@ -1,4 +1,4 @@
-﻿from typing import Optional
+from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, File, Query, Response, UploadFile, status
@@ -11,6 +11,8 @@ from app.schemas.cards import (
     CardCreate,
     CardImageCreate,
     CardImageRead,
+    CardImageReorder,
+    CardImageSetPrimary,
     CardRead,
     CardUpdate,
 )
@@ -90,6 +92,17 @@ async def upload_image(
         sort_order=sort_order,
     )
     return service.add_image(session, card_id, payload)
+
+
+@router.patch("/images/set-primary", response_model=CardImageRead)
+def set_primary_image(payload: CardImageSetPrimary, session: Session = Depends(get_session)):
+    return service.set_primary_image(session, payload.image_id)
+
+
+@router.patch("/{card_id}/images/reorder", status_code=status.HTTP_204_NO_CONTENT)
+def reorder_images(card_id: UUID, payload: CardImageReorder, session: Session = Depends(get_session)):
+    service.reorder_images(session, card_id, payload)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.delete("/images/{image_id}", status_code=status.HTTP_204_NO_CONTENT)

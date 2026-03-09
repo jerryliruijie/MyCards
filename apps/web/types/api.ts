@@ -1,4 +1,4 @@
-﻿export type Card = {
+export type Card = {
   id: string;
   title: string;
   year?: number | null;
@@ -6,6 +6,15 @@
   grade?: string | null;
   created_at: string;
   updated_at: string;
+};
+
+export type CardImage = {
+  id: string;
+  card_id: string;
+  storage_key: string;
+  content_type?: string | null;
+  is_primary: boolean;
+  sort_order: number;
 };
 
 export type CardCore = {

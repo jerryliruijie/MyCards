@@ -1,14 +1,16 @@
-ï»¿import Link from "next/link";
+import Link from "next/link";
 
+import { CardImageManager } from "@/components/card-image-manager";
 import { api } from "@/lib/api-client";
 import { resolveImageUrl } from "@/lib/media-url";
 
 export default async function CardDetailPage({ params }: { params: { id: string } }) {
   const card = await api.getCard(params.id).catch(() => null);
   const core = await api.getCardCore(params.id).catch(() => null);
+  const images = await api.listCardImages(params.id).catch(() => []);
 
   if (!card) {
-    return <div className="panel">æœªæ‰¾åˆ°è¯¥å¡ç‰‡ã€‚</div>;
+    return <div className="panel">Î´ÕÒµ½¸Ã¿¨Æ¬¡£</div>;
   }
 
   const imageSrc = resolveImageUrl(core?.primary_image_key);
@@ -17,7 +19,7 @@ export default async function CardDetailPage({ params }: { params: { id: string 
     <div className="space-y-4">
       <header className="panel">
         <h2 className="text-xl font-semibold">{card.title}</h2>
-        <p className="text-sm text-slate-600">æ ¸å¿ƒä¿¡æ¯ï¼šæ ‡é¢˜ã€å›¾ç‰‡ã€ä¹°å…¥ä»·ã€å½“å‰å¸‚åœºä»·ã€‚</p>
+        <p className="text-sm text-slate-600">ºËĞÄĞÅÏ¢£º±êÌâ¡¢Í¼Æ¬¡¢ÂòÈë¼Û¡¢µ±Ç°ÊĞ³¡¼Û¡£</p>
       </header>
 
       <section className="grid gap-3 md:grid-cols-3">
@@ -25,39 +27,39 @@ export default async function CardDetailPage({ params }: { params: { id: string 
           {imageSrc ? (
             <img src={imageSrc} alt={card.title} className="h-full w-full rounded object-cover" />
           ) : (
-            <div className="flex h-full items-center justify-center text-sm text-slate-500">
-              æš‚æ— å›¾ç‰‡
-            </div>
+            <div className="flex h-full items-center justify-center text-sm text-slate-500">ÔİÎŞÍ¼Æ¬</div>
           )}
         </div>
 
         <div className="panel">
-          <h3 className="mb-2 font-semibold">åŸºç¡€ä¿¡æ¯</h3>
+          <h3 className="mb-2 font-semibold">»ù´¡ĞÅÏ¢</h3>
           <dl className="grid grid-cols-2 gap-y-1 text-sm">
-            <dt>æ ‡é¢˜</dt>
+            <dt>±êÌâ</dt>
             <dd>{card.title}</dd>
-            <dt>å¹´ä»½</dt>
+            <dt>Äê·İ</dt>
             <dd>{card.year ?? "-"}</dd>
-            <dt>å¡å·</dt>
+            <dt>¿¨ºÅ</dt>
             <dd>{card.card_number ?? "-"}</dd>
-            <dt>è¯„çº§</dt>
+            <dt>ÆÀ¼¶</dt>
             <dd>{card.grade ?? "-"}</dd>
           </dl>
         </div>
 
         <div className="panel">
-          <h3 className="mb-2 font-semibold">ä»·æ ¼ä¿¡æ¯</h3>
+          <h3 className="mb-2 font-semibold">¼Û¸ñĞÅÏ¢</h3>
           <dl className="grid grid-cols-2 gap-y-1 text-sm">
-            <dt>ä¹°å…¥ä»·</dt>
-            <dd>{core?.buy_price != null ? `Â¥${core.buy_price.toFixed(2)}` : "-"}</dd>
-            <dt>å¸‚åœºä»·</dt>
-            <dd>{core?.market_price != null ? `Â¥${core.market_price.toFixed(2)}` : "-"}</dd>
+            <dt>ÂòÈë¼Û</dt>
+            <dd>{core?.buy_price != null ? `£¤${core.buy_price.toFixed(2)}` : "-"}</dd>
+            <dt>ÊĞ³¡¼Û</dt>
+            <dd>{core?.market_price != null ? `£¤${core.market_price.toFixed(2)}` : "-"}</dd>
           </dl>
         </div>
       </section>
 
+      <CardImageManager cardId={card.id} initialImages={images} />
+
       <Link href="/cards" className="text-sm text-blue-700 hover:underline">
-        è¿”å›å¡ç‰‡åˆ—è¡¨
+        ·µ»Ø¿¨Æ¬ÁĞ±í
       </Link>
     </div>
   );

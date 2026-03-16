@@ -21,6 +21,10 @@ MyCards 是一个开源的个人收藏卡片资产库，聚焦于体育卡、TCG
 - `apps/api`：FastAPI 后端
 - `apps/web`：Next.js 前端
 - `docs`：产品与架构文档
+- `docs/ai-collaboration`：AI 协作文档（Gemini 前端 / Codex 后端）
+- `docs/frontend-specs`：前端页面规格
+- `docs/api-contracts`：前后端接口契约
+- `mocks`：前端开发用假数据与示例响应
 - `.github/workflows`：CI 流水线
 - `infra`：本地基础设施配置
 
@@ -92,6 +96,29 @@ npm run dev
 - [x] 定价提供方接口 + Mock 实现
 - [x] Next.js 前端脚手架 + 强类型 API Client
 - [x] UI 线框方案（先评审再做精细化 UI）
+
+## AI 协作
+
+当前推荐分工：
+
+- Gemini：负责前端页面、组件、样式与交互
+- Codex：负责后端、数据库、接口契约、适配器与集成
+
+协作文档入口：
+
+- `docs/ai-collaboration/README.md`
+- `docs/ai-collaboration/gemini-frontend-workflow.md`
+- `docs/ai-collaboration/gemini-prompt-template.md`
+- `docs/frontend-specs/README.md`
+- `docs/api-contracts/README.md`
+- `mocks/README.md`
+
+推荐流程：
+
+1. 先写 `docs/frontend-specs` 页面规格
+2. 再写 `docs/api-contracts` 接口契约
+3. Gemini 依据规格和 mock 完成前端
+4. Codex 完成后端并接入真实数据
 
 ## 明确不做（v1）
 
